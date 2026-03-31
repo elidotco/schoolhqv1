@@ -60,6 +60,11 @@ export async function POST(req: Request) {
 
     console.log(">>> SCHOOL CREATED:", newSchool.id);
 
+    //  instead of updating the profile add onboarding complete to the user options data
+    const { error: metadataError } = await supabase.auth.updateUser({
+      data: { school_id: newSchool.id },
+    });
+
     // 4. Profile Update
     const { error: updateError } = await supabase
       .from("profiles")

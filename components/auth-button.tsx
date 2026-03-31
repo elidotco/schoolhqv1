@@ -6,14 +6,13 @@ import { LogoutButton } from "./logout-button";
 import { useAuth } from "@/app/providers/authProvider";
 
 export function AuthButton() {
-  const { user, profile, isLoading } = useAuth();
-  const profileData = profile;
+  const { user, isLoading } = useAuth();
 
   return isLoading ? (
     <Button disabled>Loading...</Button>
   ) : user ? (
     <div className="flex items-center gap-4">
-      <span>Welcome, {profileData?.first_name || user.email}!</span>
+      <span>Welcome, {user.user_metadata.first_name}!</span>
       <LogoutButton />
     </div>
   ) : (

@@ -24,7 +24,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
-    0;
     if (authError || !user) return null;
 
     // Fetch the profile we fixed with the RLS policies earlier

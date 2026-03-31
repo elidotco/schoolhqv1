@@ -37,8 +37,8 @@ export async function updateSession(request: NextRequest) {
 
   // Get the user from Supabase auth
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
   // 2. DEFINE PUBLIC PATHS (Routes that don't need a user)
   const isAuthRoute =
@@ -48,9 +48,13 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/auth/sign-up-success");
 
   // 3. LOGGED OUT USER LOGIC
-  if (!user) {
+  if (!session) {
     // If they aren't logged in and aren't on an auth page, send to login
-    if (!isAuthRoute && !pathname.startsWith("/api")) {
+    if (
+      !isAuthRoute &&
+      !pathname.startsWith("/api") &&
+      !pathname.startsWith("/")
+    ) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/login";
       return NextResponse.redirect(url);
@@ -60,28 +64,23 @@ export async function updateSession(request: NextRequest) {
   }
 
   // 4. LOGGED IN USER LOGIC (Check Profile)
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("school_id")
-    .eq("id", user.id)
-    .single();
 
-  const hasSchool = !!profile?.school_id;
-  const isOnboarding = pathname.startsWith("/auth/onboarding");
+  // const hasSchool = !!user.user_metadata?.school_id;
+  // const isOnboarding = pathname.startsWith("/auth/onboarding");
 
   // A. No school? Force them to onboarding (unless they are already there)
-  if (!hasSchool && !isOnboarding) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/onboarding";
-    return NextResponse.redirect(url);
-  }
+  // if (!hasSchool && !isOnboarding) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/auth/onboarding";
+  //   return NextResponse.redirect(url);
+  // }
 
   // B. Has school? Don't let them go back to onboarding or login
-  if (hasSchool && (isOnboarding || isAuthRoute)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
+  // if (hasSchool && (isOnboarding || isAuthRoute)) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/dashboard";
+  //   return NextResponse.redirect(url);
+  // }
 
   return supabaseResponse;
 }

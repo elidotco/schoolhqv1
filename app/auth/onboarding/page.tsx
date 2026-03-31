@@ -65,12 +65,12 @@ export default function OnboardingPage() {
         return;
       }
       console.log("Onboarding successful, redirecting to dashboard...");
-      router.push("/protected");
+      router.push("/dashboard");
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
-      router.push("/protected");
+      router.push("/dashboard");
     }
   }
 
@@ -79,7 +79,7 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (profile?.school_id) {
-      router.push("/protected");
+      router.push("/dashboard");
     }
   }, []);
 
