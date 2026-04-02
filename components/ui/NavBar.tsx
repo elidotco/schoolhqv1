@@ -1,8 +1,5 @@
-import { Suspense } from "react";
-import { DeployButton } from "../deploy-button";
-import Link from "next/link";
 import { GraduationCapIcon } from "lucide-react";
-import { useAuth } from "@/app/providers/authProvider";
+
 import { createClient } from "@/lib/supabase/server";
 
 export async function NavBar() {
@@ -26,11 +23,13 @@ export async function NavBar() {
       .single(),
   ]);
 
+  //   get the current route to determine if we are on the dashboard or not
+
   const school = schoolResponse.data;
   const profile = profileResponse.data;
 
   return (
-    <nav className="w-full flex justify-center border-b border-b-foreground/10 h-20 px-10">
+    <nav className="w-full flex justify-center h-20 px-10">
       <div className="w-full flex justify-between items-center p-3 px-5 text-sm">
         <div className="">
           <h2 className="text-2xl font-bold">Dashboard</h2>

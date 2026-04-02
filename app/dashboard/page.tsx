@@ -1,3 +1,5 @@
+import AcaOverview from "@/components/ui/AcaOverview";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 
@@ -27,12 +29,11 @@ async function SchoolInfo() {
 
   return <h1>{school?.name}</h1>;
 }
-export default async function ProtectedPage() {
+export default async function DashBoard() {
   return (
     <Suspense fallback={<TransactionSkeleton />}>
-      <div className="flex-1 w-full flex flex-col gap-12">
-        Hello this is the dashboard
-      </div>
+      {/* Aca Overview */}
+      <AcaOverview />
 
       <SchoolInfo />
     </Suspense>
