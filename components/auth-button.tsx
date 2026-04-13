@@ -7,6 +7,7 @@ import { useAuth } from "@/app/providers/authProvider";
 
 export function AuthButton() {
   const { user, isLoading } = useAuth();
+  console.log("AuthButton Rendered with user:", user, "isLoading:", isLoading);
 
   return isLoading ? (
     <Button disabled>Loading...</Button>

@@ -40,6 +40,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { data, error, isLoading, mutate } = useSWR("auth-user", fetchUser, {
     revalidateOnFocus: true, // Refetch when user switches tabs back to your app
     shouldRetryOnError: false,
+
+    // refresh when the auth statrus changes (e.g., user logs in or out)
   });
 
   const value = {

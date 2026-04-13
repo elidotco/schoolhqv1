@@ -32,7 +32,9 @@ export async function NavBar() {
     <nav className="w-full flex justify-center h-20 px-10">
       <div className="w-full flex justify-between items-center p-3 px-5 text-sm">
         <div className="">
-          <h2 className="text-2xl font-bold">Dashboard</h2>
+          <h2 className="text-2xl font-bold">
+            Dashboard
+            </h2>
         </div>
 
         {/* School name and admin name  */}

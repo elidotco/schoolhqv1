@@ -1,41 +1,53 @@
+"use client";
+
 import AcaOverview from "@/components/ui/AcaOverview";
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
-import { Suspense } from "react";
+import PaymentTable from "@/components/ui/PaymentTable";
+import DashboardHeader from "@/components/ui/StatCard";
+import { fetcher } from "@/lib/utils";
+import { Skeleton } from "boneyard-js/react";
+import useSWR from "swr";
+import "../../bones/registry";
 
-function TransactionSkeleton() {
-  return <ul>...</ul>;
-}
-async function SchoolInfo() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const schoolId = user?.user_metadata?.school_id;
+export default function DashBoard() {
+  const { data, isLoading } = useSWR("/api/dashboard", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 60000,
+    refreshInterval: 120000,
+  });
 
-  const { data: school } = await supabase
-    .from("schools")
-    .select("*")
-    .eq("id", schoolId)
-    .single();
+  const stats = data?.data;
 
-  if (!school) {
-    return (
-      <>
-        <p>Set UP your school information</p>
-      </>
-    );
-  }
+  // Define your skeleton fixture/mock data
+  const skeletonFixture = {
+    totalStudents: 234,
+    feesCollected: 234,
+    totalOutstanding: 134,
+    overdueStudents: 324,
+    collectionRate: 234,
+  };
 
-  return <h1>{school?.name}</h1>;
-}
-export default async function DashBoard() {
   return (
-    <Suspense fallback={<TransactionSkeleton />}>
+    <div className="space-y-6">
       {/* Aca Overview */}
       <AcaOverview />
+      {/* FIX 1: Pass the isLoading variable to the loading prop.
+         FIX 2: Ensure the children handle the "undefined" stats gracefully 
+      */}
 
-      <SchoolInfo />
-    </Suspense>
+      <Skeleton
+        loading={isLoading}
+        name="dashboard"
+        fixture={<DashboardHeader data={skeletonFixture} />}
+      >
+        <DashboardHeader data={stats || skeletonFixture} />
+      </Skeleton>
+
+      {/* Recent Transactions */}
+      {/* If isLoading is true, you might want a separate skeleton for the table */}
+      <Skeleton loading={isLoading} name="payment-table">
+        <PaymentTable payments={stats?.recentPayments || []} />
+      </Skeleton>
+    </div>
   );
 }
